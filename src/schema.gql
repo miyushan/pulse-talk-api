@@ -23,10 +23,10 @@ type LogoutResponse {
 }
 
 type Mutation {
-  login(input: LoginDto!): LoginResponse!
-  logout: LogoutResponse!
+  loginUser(input: LoginDto!): LoginResponse!
+  logoutUser: LogoutResponse!
   refreshToken: RefreshTokenResponse!
-  register(input: RegisterDto!): RegisterResponse!
+  registerUser(input: RegisterDto!): RegisterResponse!
   updateProfile(input: UpdateProfileInput!): User!
 }
 

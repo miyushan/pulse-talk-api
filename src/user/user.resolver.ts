@@ -10,6 +10,10 @@ import { AccessTokenGuard } from 'src/auth/guards';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * Update user profile
+   * @returns {User}
+   */
   @Mutation(() => User)
   async updateProfile(
     @Args('input') input: UpdateProfileInput,
@@ -20,9 +24,13 @@ export class UserResolver {
       throw new BadRequestException('Invalid user ID');
     }
 
-    return this.userService.updateProfile(userId, input);
+    return this.userService.updateUserProfile(userId, input);
   }
 
+  /**
+   * Search users
+   * @returns {User[]}
+   */
   @UseGuards(AccessTokenGuard)
   @Query(() => [User], { name: 'searchUsers' })
   async searchUsers(
@@ -37,6 +45,10 @@ export class UserResolver {
     return this.userService.searchUsers(input.userName, userId);
   }
 
+  /**
+   * Get users of chatroom
+   * @returns {User[]}
+   */
   @Query(() => [User], { name: 'usersOfChatroom' })
   async getUsersOfChatroom(@Args('chatRoomId') chatRoomId: number) {
     return this.userService.getUsersOfChatroom(chatRoomId);

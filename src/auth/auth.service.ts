@@ -22,7 +22,13 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async register(registerDto: RegisterDto, res: Response): Promise<User> {
+  /**
+   * Registers a new user, sets auth cookies.
+   * @param registerDto Data for registration
+   * @param res Express Response object (to set cookies)
+   * @returns Created user
+   */
+  async registerUser(registerDto: RegisterDto, res: Response): Promise<User> {
     // Check if user exists
     const existingUser = await this.prisma.user.findFirst({
       where: {
@@ -53,7 +59,13 @@ export class AuthService {
     return user;
   }
 
-  async login(loginDto: LoginDto, res: Response): Promise<User> {
+  /**
+   * Logs in a user, sets auth cookies.
+   * @param loginDto Data for login
+   * @param res Express Response object (to set cookies)
+   * @returns Logged in user
+   */
+  async loginUser(loginDto: LoginDto, res: Response): Promise<User> {
     // Validate credentials
     const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
@@ -66,6 +78,11 @@ export class AuthService {
     return user;
   }
 
+  /**
+   * Refreshes access token, sets auth cookies.
+   * @param req Express Request object (to get refresh token from cookies)
+   * @param res Express Response object (to set cookies)
+   */
   async refreshToken(req: Request, res: Response): Promise<void> {
     // Verify refresh token
     const refreshToken = req.cookies?.[REFRESH_TOKEN];
@@ -92,12 +109,20 @@ export class AuthService {
     await this.setAuthCookies(user, res);
   }
 
-  async logout(res: Response): Promise<void> {
+  /**
+   * Logs out a user, clears auth cookies.
+   * @param res Express Response object (to clear cookies)
+   */
+  async logoutUser(res: Response): Promise<void> {
     res.clearCookie(ACCESS_TOKEN);
     res.clearCookie(REFRESH_TOKEN);
   }
 
-  // utils
+  /**
+   * Generates access and refresh tokens for a user.
+   * @param user User object
+   * @returns Object containing access and refresh tokens
+   */
   private async generateTokens(user: User): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -118,6 +143,11 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  /**
+   * Sets auth cookies for a user.
+   * @param user User object
+   * @param res Express Response object (to set cookies)
+   */
   private async setAuthCookies(user: User, res: Response): Promise<void> {
     const tokens = await this.generateTokens(user);
     const { accessToken, refreshToken } = tokens;
