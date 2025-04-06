@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { BadRequestException } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User, UpdateProfileInput, SearchUsersInput } from './types';
 import { RequestWithUser } from 'src/types';
+import { AccessTokenGuard } from 'src/auth/guards';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -21,6 +23,7 @@ export class UserResolver {
     return this.userService.updateProfile(userId, input);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Query(() => [User], { name: 'searchUsers' })
   async searchUsers(
     @Args('input') input: SearchUsersInput,

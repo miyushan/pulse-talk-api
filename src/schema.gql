@@ -7,13 +7,50 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+type LoginResponse {
+  """Feedback message for the operation"""
+  message: String!
+  user: User!
+}
+
+type LogoutResponse {
+  message: String!
+}
+
 type Mutation {
+  login(input: LoginDto!): LoginResponse!
+  logout: LogoutResponse!
+  refreshToken: RefreshTokenResponse!
+  register(input: RegisterDto!): RegisterResponse!
   updateProfile(input: UpdateProfileInput!): User!
 }
 
 type Query {
   searchUsers(input: SearchUsersInput!): [User!]!
   usersOfChatroom(chatRoomId: Float!): [User!]!
+}
+
+type RefreshTokenResponse {
+  success: Boolean!
+}
+
+input RegisterDto {
+  email: String!
+  firstName: String!
+  lastName: String
+  password: String!
+  userName: String!
+}
+
+type RegisterResponse {
+  """Feedback message for the operation"""
+  message: String!
+  user: User!
 }
 
 input SearchUsersInput {
