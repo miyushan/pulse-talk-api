@@ -1,0 +1,11 @@
+# dependencies
+/node_modules
+
+# build
+/dist
+
+# secrets
+.env
+
+# IDE
+/.vscode
