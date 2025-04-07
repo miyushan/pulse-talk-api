@@ -42,12 +42,12 @@ export class GqlConfigService implements GqlOptionsFactory {
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       context: ({ req, res }: { req: RequestWithUser; res: Response }) => {
-        const pubSub = this.redisSubscriptionService.getPubSub();
+        // const pubSub = this.redisSubscriptionService.getPubSub();
 
         return {
           req,
           res,
-          pubSub,
+          // pubSub,
         };
       },
     };

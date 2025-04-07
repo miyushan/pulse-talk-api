@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { TokenModule } from './token/token.module';
 import { RedisSubscriptionModule } from './redis-subscription/redis-subscription.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChatroomModule } from './chatroom/chatroom.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     AuthModule,
     TokenModule,
+    ChatroomModule,
     RedisSubscriptionModule,
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,

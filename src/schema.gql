@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ChatRoom {
+  createdAt: DateTime
+  id: ID
+  messages: [Message!]
+  name: String
+  updatedAt: DateTime
+  users: [User!]
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -23,15 +32,32 @@ type LogoutResponse {
   message: String!
 }
 
+type Message {
+  chatRoom: ChatRoom
+  content: String
+  createdAt: DateTime
+  id: ID
+  updatedAt: DateTime
+  user: User
+}
+
 type Mutation {
+  addUsersToChatroom(chatRoomId: Float!, userIds: [Float!]!): ChatRoom!
+  createChatroom(name: String!): ChatRoom!
+  deleteChatroom(chatRoomId: Float!): String!
   loginUser(input: LoginDto!): LoginResponse!
   logoutUser: LogoutResponse!
   refreshToken: RefreshTokenResponse!
   registerUser(input: RegisterDto!): RegisterResponse!
+  sendMessage(chatRoomId: Float!, content: String!): Message!
   updateProfile(input: UpdateProfileInput!): User!
+  userStartedTypingMutation(chatRoomId: Float!): User!
+  userStoppedTypingMutation(chatRoomId: Float!): User!
 }
 
 type Query {
+  getChatRoomsForUser(userId: Float!): [ChatRoom!]!
+  getMessagesForChatroom(chatRoomId: Float!): [Message!]!
   searchUsers(input: SearchUsersInput!): [User!]!
   usersOfChatroom(chatRoomId: Float!): [User!]!
 }
