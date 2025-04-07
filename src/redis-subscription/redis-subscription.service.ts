@@ -12,6 +12,13 @@ export class RedisSubscriptionService {
         connection: {
           host: this.configService.get('REDIS_HOST'),
           port: this.configService.get('REDIS_PORT'),
+          password: this.configService.get('REDIS_PASSWORD'),
+          retryStrategy: (times) => {
+            if (times > 10) {
+              return null;
+            }
+            return Math.min(times * 50, 2000);
+          },
         },
       });
     } catch (error) {
