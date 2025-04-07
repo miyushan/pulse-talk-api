@@ -8,7 +8,11 @@ import {
   LogoutResponse,
 } from './types';
 import { Request, Response } from 'express';
-import { UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { RefreshTokenGuard } from './guards';
 
 @Resolver()
@@ -26,12 +30,31 @@ export class AuthResolver {
     @Args('input') registerDto: RegisterDto,
     @Context() context: { res: Response },
   ): Promise<RegisterResponse> {
-    const user = await this.authService.registerUser(registerDto, context.res);
-    return {
-      user,
-      message: 'User registered successfully',
-      success: true,
-    };
+    try {
+      const user = await this.authService.registerUser(
+        registerDto,
+        context.res,
+      );
+      return {
+        user,
+        message: 'User registered successfully',
+        success: true,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        return {
+          user: null,
+          message: error.message,
+          success: false,
+        };
+      } else {
+        return {
+          user: null,
+          message: 'An error occurred',
+          success: false,
+        };
+      }
+    }
   }
 
   /**
