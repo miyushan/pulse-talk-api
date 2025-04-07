@@ -8,7 +8,7 @@ import {
   LogoutResponse,
 } from './types';
 import { Request, Response } from 'express';
-import { UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { RefreshTokenGuard } from './guards';
 
 @Resolver()
@@ -30,6 +30,7 @@ export class AuthResolver {
     return {
       user,
       message: 'User registered successfully',
+      success: true,
     };
   }
 
@@ -44,8 +45,16 @@ export class AuthResolver {
     @Args('input') loginDto: LoginDto,
     @Context() context: { res: Response },
   ): Promise<LoginResponse> {
-    const user = await this.authService.loginUser(loginDto, context.res);
-    return { user, message: 'Logged in successfully' };
+    try {
+      const user = await this.authService.loginUser(loginDto, context.res);
+      return { user, message: 'Logged in successfully', success: true };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        return { user: null, message: 'Invalid credentials', success: false };
+      } else {
+        return { user: null, message: 'An error occurred', success: false };
+      }
+    }
   }
 
   /**

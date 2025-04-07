@@ -15,7 +15,8 @@ input LoginDto {
 type LoginResponse {
   """Feedback message for the operation"""
   message: String!
-  user: User!
+  success: Boolean!
+  user: User
 }
 
 type LogoutResponse {
@@ -50,7 +51,8 @@ input RegisterDto {
 type RegisterResponse {
   """Feedback message for the operation"""
   message: String!
-  user: User!
+  success: Boolean!
+  user: User
 }
 
 input SearchUsersInput {
