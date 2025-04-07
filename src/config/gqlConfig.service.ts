@@ -5,10 +5,14 @@ import { GqlOptionsFactory } from '@nestjs/graphql';
 import { RequestWithUser } from 'src/types';
 import { Context } from 'graphql-ws';
 import { TokenService } from 'src/token/token.service';
+import { RedisSubscriptionService } from 'src/redis-subscription/redis-subscription.service';
 
 @Injectable()
 export class GqlConfigService implements GqlOptionsFactory {
-  constructor(private readonly tokenService: TokenService) {}
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly redisSubscriptionService: RedisSubscriptionService,
+  ) {}
 
   createGqlOptions(): ApolloDriverConfig {
     return {
@@ -37,10 +41,15 @@ export class GqlConfigService implements GqlOptionsFactory {
       },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      context: ({ req, res }: { req: RequestWithUser; res: Response }) => ({
-        req,
-        res,
-      }),
+      context: ({ req, res }: { req: RequestWithUser; res: Response }) => {
+        const pubSub = this.redisSubscriptionService.getPubSub();
+
+        return {
+          req,
+          res,
+          pubSub,
+        };
+      },
     };
   }
 }
