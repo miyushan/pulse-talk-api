@@ -30,31 +30,12 @@ export class AuthResolver {
     @Args('input') registerDto: RegisterDto,
     @Context() context: { res: Response },
   ): Promise<RegisterResponse> {
-    try {
-      const user = await this.authService.registerUser(
-        registerDto,
-        context.res,
-      );
-      return {
-        user,
-        message: 'User registered successfully',
-        success: true,
-      };
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        return {
-          user: null,
-          message: error.message,
-          success: false,
-        };
-      } else {
-        return {
-          user: null,
-          message: 'An error occurred',
-          success: false,
-        };
-      }
-    }
+    const user = await this.authService.registerUser(registerDto, context.res);
+    return {
+      user,
+      message: 'User registered successfully',
+      success: true,
+    };
   }
 
   /**
@@ -68,16 +49,8 @@ export class AuthResolver {
     @Args('input') loginDto: LoginDto,
     @Context() context: { res: Response },
   ): Promise<LoginResponse> {
-    try {
-      const user = await this.authService.loginUser(loginDto, context.res);
-      return { user, message: 'Logged in successfully', success: true };
-    } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        return { user: null, message: 'Invalid credentials', success: false };
-      } else {
-        return { user: null, message: 'An error occurred', success: false };
-      }
-    }
+    const user = await this.authService.loginUser(loginDto, context.res);
+    return { user, message: 'Logged in successfully', success: true };
   }
 
   /**
