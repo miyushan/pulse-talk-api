@@ -34,7 +34,7 @@ export class UserResolver {
   @UseGuards(AccessTokenGuard)
   @Query(() => [User], { name: 'searchUsers' })
   async searchUsers(
-    @Args('input') input: SearchUsersInput,
+    @Args('input', { type: () => SearchUsersInput }) input: SearchUsersInput,
     @Context() context: { req: RequestWithUser },
   ) {
     const userId = context.req.user?.sub;
