@@ -10,5 +10,5 @@ export class CreateChatroomDto {
 
   @IsArray()
   @Field(() => [String])
-  userIds: string[];
+  userIds: string[]; // In GraphQL, all ids are represented as strings. then convert to real types
 }

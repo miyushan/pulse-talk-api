@@ -8,6 +8,8 @@ import { TokenModule } from './token/token.module';
 import { RedisSubscriptionModule } from './redis-subscription/redis-subscription.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChatroomModule } from './chatroom/chatroom.module';
+import { LiveChatroomModule } from './live-chatroom/live-chatroom.module';
+import { RedisClientModule } from './redis-client/redis-client.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ChatroomModule } from './chatroom/chatroom.module';
     TokenModule,
     ChatroomModule,
     RedisSubscriptionModule,
+    LiveChatroomModule,
+    RedisClientModule,
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
       imports: [TokenModule, RedisSubscriptionModule],

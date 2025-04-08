@@ -25,6 +25,43 @@ export class ChatroomResolver {
     this.pubSub = new PubSub();
   }
 
+  @Subscription((returns) => Message, {
+    nullable: true,
+    resolve: (value) => value.newMessage,
+  })
+  newMessage(@Args('chatRoomId') chatRoomId: number) {
+    return this.pubSub.asyncIterableIterator(`newMessage.${chatRoomId}`);
+  }
+
+  @Subscription(() => User, {
+    nullable: true,
+    resolve: (value) => value.user,
+    filter: (payload, variables) => {
+      console.log('payload1', variables, payload.typingUserId);
+      return variables.userId !== payload.typingUserId;
+    },
+  })
+  userStartedTyping(
+    @Args('chatRoomId') chatRoomId: number,
+    @Args('userId') userId: number,
+  ) {
+    return this.pubSub.asyncIterableIterator(`userStartedTyping.${chatRoomId}`);
+  }
+
+  @Subscription(() => User, {
+    nullable: true,
+    resolve: (value) => value.user,
+    filter: (payload, variables) => {
+      return variables.userId !== payload.typingUserId;
+    },
+  })
+  userStoppedTyping(
+    @Args('chatRoomId') chatRoomId: number,
+    @Args('userId') userId: number,
+  ) {
+    return this.pubSub.asyncIterableIterator(`userStoppedTyping.${chatRoomId}`);
+  }
+
   @UseGuards(AccessTokenGuard)
   @Mutation((returns) => User)
   async userStartedTypingMutation(

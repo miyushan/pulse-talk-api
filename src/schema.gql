@@ -45,6 +45,8 @@ type Mutation {
   addUsersToChatroom(chatRoomId: Float!, userIds: [Float!]!): ChatRoom!
   createChatroom(name: String!): ChatRoom!
   deleteChatroom(chatRoomId: Float!): String!
+  enterChatroom(chatRoomId: Float!): Boolean!
+  leaveChatroom(chatRoomId: Float!): Boolean!
   loginUser(input: LoginDto!): LoginResponse!
   logoutUser: LogoutResponse!
   refreshToken: RefreshTokenResponse!
@@ -58,8 +60,8 @@ type Mutation {
 type Query {
   getChatRoomsForUser(userId: Float!): [ChatRoom!]!
   getMessagesForChatroom(chatRoomId: Float!): [Message!]!
+  getUsersOfChatroom(chatRoomId: Float!): [User!]!
   searchUsers(input: SearchUsersInput!): [User!]!
-  usersOfChatroom(chatRoomId: Float!): [User!]!
 }
 
 type RefreshTokenResponse {
@@ -83,6 +85,13 @@ type RegisterResponse {
 
 input SearchUsersInput {
   userName: String!
+}
+
+type Subscription {
+  liveUsersInChatroom(chatRoomId: Float!): [User!]
+  newMessage(chatRoomId: Float!): Message
+  userStartedTyping(chatRoomId: Float!, userId: Float!): User
+  userStoppedTyping(chatRoomId: Float!, userId: Float!): User
 }
 
 input UpdateProfileInput {

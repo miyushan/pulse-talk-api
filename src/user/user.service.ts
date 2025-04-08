@@ -53,15 +53,15 @@ export class UserService {
 
   /**
    * Retrieves users associated with a specific chatroom.
-   * @param chatroomId The ID of the chatroom.
+   * @param chatRoomId The ID of the chatroom.
    * @returns An array of users associated with the chatroom.
    */
-  async getUsersOfChatroom(chatroomId: number): Promise<User[]> {
+  async getUsersOfChatroom(chatRoomId: number): Promise<User[]> {
     return this.prisma.user.findMany({
       where: {
         chatRooms: {
           some: {
-            id: chatroomId,
+            id: chatRoomId,
           },
         },
       },

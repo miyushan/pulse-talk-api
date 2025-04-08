@@ -34,19 +34,19 @@ export class ChatroomService {
     });
   }
 
-  async addUsersToChatroom(chatroomId: number, userIds: number[]) {
+  async addUsersToChatroom(chatRoomId: number, userIds: number[]) {
     const existingChatroom = await this.prisma.chatRoom.findUnique({
       where: {
-        id: chatroomId,
+        id: chatRoomId,
       },
     });
     if (!existingChatroom) {
-      throw new BadRequestException({ chatroomId: 'Chatroom not found' });
+      throw new BadRequestException({ chatRoomId: 'Chatroom not found' });
     }
 
     return await this.prisma.chatRoom.update({
       where: {
-        id: chatroomId,
+        id: chatRoomId,
       },
       data: {
         users: {
@@ -103,10 +103,10 @@ export class ChatroomService {
     });
   }
 
-  async getMessagesForChatroom(chatroomId: number) {
+  async getMessagesForChatroom(chatRoomId: number) {
     return await this.prisma.message.findMany({
       where: {
-        chatRoomId: chatroomId,
+        chatRoomId: chatRoomId,
       },
       include: {
         chatRoom: {
@@ -123,10 +123,10 @@ export class ChatroomService {
     });
   }
 
-  async deleteChatroom(chatroomId: number) {
+  async deleteChatroom(chatRoomId: number) {
     return this.prisma.chatRoom.delete({
       where: {
-        id: chatroomId,
+        id: chatRoomId,
       },
     });
   }

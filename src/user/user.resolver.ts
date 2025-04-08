@@ -49,7 +49,7 @@ export class UserResolver {
    * Get users of chatroom
    * @returns {User[]}
    */
-  @Query(() => [User], { name: 'usersOfChatroom' })
+  @Query(() => [User], { name: 'getUsersOfChatroom' })
   async getUsersOfChatroom(@Args('chatRoomId') chatRoomId: number) {
     return this.userService.getUsersOfChatroom(chatRoomId);
   }
