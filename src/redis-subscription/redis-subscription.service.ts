@@ -26,6 +26,14 @@ export class RedisSubscriptionService {
     }
   }
 
+  async publish(channel: string, message: any) {
+    return this.pubSub.publish(channel, message);
+  }
+
+  asyncIterator(channel: string) {
+    return this.pubSub.asyncIterator(channel);
+  }
+
   getPubSub() {
     return this.pubSub;
   }

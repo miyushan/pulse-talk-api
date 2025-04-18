@@ -10,27 +10,29 @@ import { ChatroomService } from './chatroom.service';
 import { UserService } from 'src/user/user.service';
 import { UseGuards } from '@nestjs/common';
 import { ChatRoom, Message } from './types/types';
-import { PubSub } from 'graphql-subscriptions';
 import { User } from 'src/user/types';
 import { RequestWithUser } from 'src/types';
 import { AccessTokenGuard } from 'src/auth/guards';
+import { RedisSubscriptionService } from 'src/redis-subscription/redis-subscription.service';
 
 @Resolver()
 export class ChatroomResolver {
-  public pubSub: PubSub;
   constructor(
     private readonly chatroomService: ChatroomService,
     private readonly userService: UserService,
-  ) {
-    this.pubSub = new PubSub();
-  }
+    private readonly pubSub: RedisSubscriptionService,
+  ) {}
 
   @Subscription((returns) => Message, {
     nullable: true,
-    resolve: (value) => value.newMessage,
+    resolve: (value) => {
+      console.error('New message subscription triggered:', value);
+      return value.newMessage;
+    },
   })
   newMessage(@Args('chatRoomId') chatRoomId: number) {
-    return this.pubSub.asyncIterableIterator(`newMessage.${chatRoomId}`);
+    console.error('New message subscription initialized:', chatRoomId);
+    return this.pubSub.asyncIterator(`newMessage.${chatRoomId}`);
   }
 
   @Subscription(() => User, {
@@ -45,7 +47,8 @@ export class ChatroomResolver {
     @Args('chatRoomId') chatRoomId: number,
     @Args('userId') userId: number,
   ) {
-    return this.pubSub.asyncIterableIterator(`userStartedTyping.${chatRoomId}`);
+    console.error('User started typing subscription initialized:', chatRoomId);
+    return this.pubSub.asyncIterator(`userStartedTyping.${chatRoomId}`);
   }
 
   @Subscription(() => User, {
@@ -59,7 +62,7 @@ export class ChatroomResolver {
     @Args('chatRoomId') chatRoomId: number,
     @Args('userId') userId: number,
   ) {
-    return this.pubSub.asyncIterableIterator(`userStoppedTyping.${chatRoomId}`);
+    return this.pubSub.asyncIterator(`userStoppedTyping.${chatRoomId}`);
   }
 
   @UseGuards(AccessTokenGuard)

@@ -3,8 +3,8 @@ import { ChatroomService } from './chatroom.service';
 import { ChatroomResolver } from './chatroom.resolver';
 import { PrismaService } from 'src/config/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { RedisSubscriptionService } from 'src/redis-subscription/redis-subscription.service';
 
 @Module({
   providers: [
@@ -13,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     PrismaService,
     UserService,
     JwtService,
+    RedisSubscriptionService,
   ],
 })
 export class ChatroomModule {}
